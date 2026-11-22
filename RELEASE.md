@@ -6,7 +6,7 @@ In the Godot editor they're under **Project → Export…**.
 | Platform | Status |
 |---|---|
 | macOS | ✅ Builds and runs (`build/macos/MathtimeWithPip.zip`). Ad-hoc signed, so it runs on this Mac; other Macs need Developer ID signing and notarization. |
-| Web | ✅ Builds and runs (`build/web/`). Works in Safari, including on an iPad. |
+| Web | ✅ Builds and runs (`build/web/`). Works in Safari, including on an iPad. **Published automatically** to https://natedsaint.github.io/mathtime-with-pip/ on every push to `main` (see `.github/workflows/publish-web.yml`). |
 | iOS (iPad) | ⏳ Preset ready; needs the Apple steps below. |
 | Android | ✅ Builds a test APK; the Play Store `.aab` builds once you add your upload key (see below). |
 

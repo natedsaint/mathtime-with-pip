@@ -1,0 +1,92 @@
+# Builds the Web version of Mathtime With Pip with Godot and publishes it to GitHub Pages.
+# Runs on every push to main, or by hand from the Actions tab ("Run workflow").
+#
+# One-time setup: repo Settings → Pages → Build and deployment → Source: "GitHub Actions".
+
+name: Publish web build
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Only one deploy at a time; a newer push replaces an in-progress one.
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+env:
+  GODOT_VERSION: "4.7.2" # keep in step with the editor version the project uses
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      # The full template bundle is ~1 GB, so only the web templates are kept, and cached.
+      - name: Cache Godot and web export templates
+        id: godot-cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/godot
+            ~/.local/share/godot/export_templates
+          key: godot-${{ env.GODOT_VERSION }}-web-templates
+
+      - name: Download Godot and web export templates
+        if: steps.godot-cache.outputs.cache-hit != 'true'
+        run: |
+          base="https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-stable"
+          mkdir -p ~/godot
+          curl -fsSL -o /tmp/godot.zip "$base/Godot_v${GODOT_VERSION}-stable_linux.x86_64.zip"
+          unzip -q /tmp/godot.zip -d ~/godot
+          mv ~/godot/Godot_v${GODOT_VERSION}-stable_linux.x86_64 ~/godot/godot
+          chmod +x ~/godot/godot
+          curl -fsSL -o /tmp/templates.tpz "$base/Godot_v${GODOT_VERSION}-stable_export_templates.tpz"
+          dest=~/.local/share/godot/export_templates/${GODOT_VERSION}.stable
+          mkdir -p "$dest"
+          unzip -q -j /tmp/templates.tpz 'templates/web_*' 'templates/version.txt' -d "$dest"
+          ls "$dest"
+
+      - name: Import project
+        run: ~/godot/godot --headless --path . --import
+
+      - name: Export web build
+        run: |
+          mkdir -p build/web
+          touch build/.gdignore   # keep Godot from importing its own output
+          ~/godot/godot --headless --path . --export-release "Web" build/web/index.html
+          test -f build/web/index.wasm && test -f build/web/index.pck
+
+      # Publishes the privacy policy at <site>/privacy.html once the [YOUR ...] placeholders
+      # are filled in (handy as the App Store / Play privacy URL). Skipped until then.
+      - name: Add privacy policy page
+        run: |
+          if grep -q '\[YOUR' store/privacy-policy.html; then
+            echo "::notice::store/privacy-policy.html still has [YOUR ...] placeholders, so it isn't published yet."
+          else
+            cp store/privacy-policy.html build/web/privacy.html
+          fi
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: build/web
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
