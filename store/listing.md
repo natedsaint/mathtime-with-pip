@@ -13,7 +13,7 @@ Anything in [BRACKETS] needs filling in.
 | **Subtitle** (≤30) | Math flashcards that cheer you |
 | **Primary category** | Education |
 | **Secondary category** | Games → Educational (optional) |
-| **Bundle ID** | [com.yourname.mathtime], the same as in the iOS export preset |
+| **Bundle ID** | io.github.natedsaint.mathtimewithpip |
 | **SKU** | mathtime-001 |
 | **Price** | Free, or your choice |
 

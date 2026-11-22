@@ -35,7 +35,7 @@ godot --headless --path . --export-release "iOS (iPad)" build/ios/MathtimeWithPi
 - [ ] In Xcode → Settings → Accounts, sign in with your developer Apple ID.
 
 ### 3. Fill in the iOS preset
-- [ ] **Bundle identifier:** currently the placeholder `com.changeme.mathtime`. Use a reverse-domain name you control, e.g. `com.yourname.mathtime`. It can never change after the first upload. Update it in all four presets.
+- [x] **Bundle identifier:** `io.github.natedsaint.mathtimewithpip` (set in all presets). It can never change after the first upload, so register exactly this in App Store Connect.
 - [ ] **App Store Team ID:** the 10-character code from step 1.
 - Already set: iPad only (`targeted_device_family`), iOS 15+, version 1.0 (build 1), the Pip app icon, a cream launch screen, and rotation in any orientation.
 
@@ -112,7 +112,7 @@ This key identifies you to Google Play. **Back it up and don't lose the password
 It will ask you to choose a password and fill in your name. Then in Godot → Project → Export → **Android (Play Store)** → Keystore → Release, enter the keystore path, the alias (`mathtime`) and the password. Godot keeps these in `.godot/export_credentials.cfg`, which is not committed. You can also use the environment variables `GODOT_ANDROID_KEYSTORE_RELEASE_PATH`, `GODOT_ANDROID_KEYSTORE_RELEASE_USER` and `GODOT_ANDROID_KEYSTORE_RELEASE_PASSWORD`.
 
 ### 3. Package name
-- [ ] Replace `com.changeme.mathtime` in both Android presets. It can never change after the first upload. Using the same ID as the iPad bundle is fine.
+- [x] Package name: `io.github.natedsaint.mathtimewithpip`, the same as the iPad bundle ID. It can never change after the first upload.
 
 ### 4. Google Play Console
 - [ ] Create a developer account at play.google.com/console ($25 one-time, plus identity verification).
