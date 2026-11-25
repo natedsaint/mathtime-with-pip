@@ -2,6 +2,7 @@ extends Node
 ## Developer helper. Does nothing in normal play.
 ## Screenshot a screen:  godot --path . -- --shot=game --mode=1 --out=/tmp/shot.png
 ## Optional: --ops=0,2 (Question.Op values)  --level=2  --keys=56 (types into the game)
+## Preview a phone camera cutout: --safe-inset=0,60,0,0 (left,top,right,bottom in UI units)
 
 func _ready() -> void:
 	var args := {}
@@ -134,6 +135,8 @@ func _take_shot(args: Dictionary) -> void:
 		get_tree().current_scene.queue_free()
 		scene = load("res://scenes/%s.tscn" % args["shot"]).instantiate()
 		sub.add_child(scene)
+		if scene is Control:
+			ScreenFit.apply_to(scene)
 		vp = sub
 		for i in 10:
 			await get_tree().process_frame

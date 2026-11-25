@@ -109,7 +109,7 @@ This key identifies you to Google Play. **Back it up and don't lose the password
 /opt/homebrew/opt/openjdk@17/bin/keytool -genkeypair -v -keystore ~/keys/mathtime-upload.keystore \
   -alias mathtime -keyalg RSA -keysize 2048 -validity 10000
 ```
-It will ask you to choose a password and fill in your name. Then in Godot → Project → Export → **Android (Play Store)** → Keystore → Release, enter the keystore path, the alias (`mathtime`) and the password. Godot keeps these in `.godot/export_credentials.cfg`, which is not committed. You can also use the environment variables `GODOT_ANDROID_KEYSTORE_RELEASE_PATH`, `GODOT_ANDROID_KEYSTORE_RELEASE_USER` and `GODOT_ANDROID_KEYSTORE_RELEASE_PASSWORD`.
+It will ask you to choose a password and fill in your name. **Use only letters, numbers and hyphens in the password.** Godot's Play Store (Gradle) build fails to sign with passwords containing characters like `$`, `"`, `\`, `!` or spaces, and reports it as "Release Username and/or Password is invalid". To fix an existing key, run `keytool -storepasswd -keystore ~/keys/mathtime-upload.keystore`, which keeps the same key. Then in Godot → Project → Export → **Android (Play Store)** → Keystore → Release, enter the keystore path, the alias (`mathtime`) and the password. Godot keeps these in `.godot/export_credentials.cfg`, which is not committed. You can also use the environment variables `GODOT_ANDROID_KEYSTORE_RELEASE_PATH`, `GODOT_ANDROID_KEYSTORE_RELEASE_USER` and `GODOT_ANDROID_KEYSTORE_RELEASE_PASSWORD`.
 
 ### 3. Package name
 - [x] Package name: `io.github.natedsaint.mathtimewithpip`, the same as the iPad bundle ID. It can never change after the first upload.
